@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BLE App</string>
+    <string name="app_bar_title">BLE Scanned Info</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="battery_level">Battery Level:</string>
+    <string name="battery_10">battery_10</string>
+    <string name="stop_scan">Not Scanning</string>
+    <string name="start_scan">Scanning</string>
+
+</resources>
