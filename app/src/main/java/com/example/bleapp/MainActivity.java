@@ -230,13 +230,10 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
         }
 
         if (containsPermanentDenial) {
-            // TODO: Handle permanent denial (e.g., show AlertDialog with justification)
-            // Note: The user will need to navigate to App Settings and manually grant
-            // permissions that were permanently denied
         } else if (containsDenial) {
             requestRelevantRuntimePermissions();
         } else if (allGranted && hasRequiredBluetoothPermissions(getApplicationContext())) {
-            startBleScan();
+            recreate();
         } else {
             recreate();
         }
