@@ -4,8 +4,15 @@
     <string name="permission_required">Permission Required</string>
     <string name="please_wait">Please Wait</string>
     <string name="battery_level">Battery Level:</string>
-    <string name="battery_10">battery_10</string>
+    <string name="battery_10">10%</string>
     <string name="stop_scan">Not Scanning</string>
     <string name="start_scan">Scanning</string>
+    <string name="scan_status">Scan Status</string>
+    <string name="scan">Scan</string>
+    <string name="ble_scanned_device_characteristic_info">Scanned Device Characteristics Info:</string>
+    <string name="name">Name:</string>
+    <string name="address">address:</string>
+    <string name="address_hint">00000–0000-00000</string>
+    <string name="device_name_hint">Scanned device name</string>
 
 </resources>

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.navigation.Navigator;
 
 import com.example.bleapp.R;
 
@@ -63,20 +65,18 @@ public class InfoDetailsActivity extends AppCompatActivity {
                         Log.w("BluetoothGattCallback", "Successfully connected to " + deviceAddress);
                         gatt.discoverServices();
                         String name = gatt.getDevice().getName();
-                        int type = gatt.getDevice().getType();
-                        Toast.makeText(InfoDetailsActivity.this, "Successfully connected to " + name, Toast.LENGTH_SHORT).show();
-
-                        Log.w("BluetoothGattCallback", " device type " + type);
+                        runOnUiThread(() -> Toast.makeText(InfoDetailsActivity.this, "Successfully connected to " + name, Toast.LENGTH_SHORT).show());
                         Log.w("BluetoothGattCallback", " device name " + name);
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                         Log.w("BluetoothGattCallback", "Successfully disconnected from " + deviceAddress);
-                        Toast.makeText(InfoDetailsActivity.this, "Device disconnected", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> Toast.makeText(InfoDetailsActivity.this, "Device Disconnected", Toast.LENGTH_SHORT).show());
 
                         gatt.close();
                     }
                 } else {
                     Log.w("BluetoothGattCallback", "Error " + status + " encountered for " + deviceAddress + "! Disconnecting...");
-                    Toast.makeText(InfoDetailsActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(InfoDetailsActivity.this, "Device Disconnecting", Toast.LENGTH_SHORT).show());
+
                     gatt.close();
                 }
             }
@@ -161,7 +161,6 @@ public class InfoDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // Request to read the characteristic value
         gatt.readCharacteristic(deviceNameCharacteristic);
     }
 
@@ -180,6 +179,14 @@ public class InfoDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.app_bar_title);
             toolbar.setTitleTextColor(Color.WHITE);
         }
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // back button pressed
+                onBackPressed();
+
+            }
+        });
         addressTv.setText(scannedBleAddress);
         bluetoothGattData = scanResult.getDevice().connectGatt(getApplicationContext(), false, gattCallback);
     }

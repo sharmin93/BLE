@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
         runOnUiThread(() -> {
             new AlertDialog.Builder(this)
                     .setTitle("Location permission required")
-                    .setMessage("location access in order to scan for BLE devices.")
+                    .setMessage("Please give location access in order to scan for BLE devices.")
                     .setCancelable(false)
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         ActivityCompat.requestPermissions(this, new String[]{
@@ -183,10 +183,7 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
         runOnUiThread(() -> {
             new AlertDialog.Builder(this)
                     .setTitle("Bluetooth permission required")
-                    .setMessage(
-                            "Starting from Android 12, the system requires apps to be granted " +
-                                    "Bluetooth access in order to scan for and connect to BLE devices."
-                    )
+                    .setMessage("Please give Bluetooth access in order to scan  and connect to BLE devices.")
                     .setCancelable(false)
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         ActivityCompat.requestPermissions(
@@ -241,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
         } else if (allGranted && hasRequiredBluetoothPermissions(getApplicationContext())) {
             startBleScan();
         } else {
-            // Unexpected scenario encountered when handling permissions
             recreate();
         }
     }
@@ -262,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
     private void promptEnableBluetooth() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 !hasPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT)) {
-            // Insufficient permission to prompt for Bluetooth enabling
             return;
         }
 
@@ -273,7 +268,6 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
     }
 
     public BluetoothAdapter getBluetoothAdapter() {
-
         if (bluetoothAdapter == null) {
             BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             bluetoothAdapter = bluetoothManager.getAdapter();
@@ -307,13 +301,10 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
                     System.out.println("scanCall" + deviceName);
                     Log.i("ScanCallback", "Found BLE device! Name: " + deviceName + ", address: " + deviceAddress);
                     scanResults.add(result);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            scanResultAdapter.notifyItemInserted(scanResults.size() - 1);
-                            scanResultAdapter = new ScanResultAdapter(MainActivity.this, scanResults, MainActivity.this);
-                            scanResultrecyclerView.setAdapter(scanResultAdapter);
-                        }
+                    runOnUiThread(() -> {
+                        scanResultAdapter.notifyItemInserted(scanResults.size() - 1);
+                        scanResultAdapter = new ScanResultAdapter(MainActivity.this, scanResults, MainActivity.this);
+                        scanResultrecyclerView.setAdapter(scanResultAdapter);
                     });
 
                 }
@@ -323,24 +314,17 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
             @Override
             public void onScanFailed(int errorCode) {
                 Log.e("ScanCallback", "onScanFailed: code " + errorCode);
-                Toast.makeText(MainActivity.this, "Scan failed, Please try again later.", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Scan failed, Please try again later.", Toast.LENGTH_SHORT).show());
             }
         };
 
     }
 
-    // Custom setter for isScanning
     private void setIsScanning(boolean value) {
         isScanning = value;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                scanButton.setText(isScanning ? "Stop Scan" : "Start Scan");
-            }
-        });
+        runOnUiThread(() -> scanButton.setText(isScanning ? "Stop Scan" : "Start Scan"));
     }
 
-    // Getter for isScanning (if needed)
     public boolean isScanning() {
         return isScanning;
     }
@@ -351,15 +335,13 @@ public class MainActivity extends AppCompatActivity implements BleItemInterface 
     public void onItemClickListener(ScanResult scanResult) {
         loadingDialog.startLoadingDialog();
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingDialog.dismissDialog();
-                Intent intent = new Intent(MainActivity.this, InfoDetailsActivity.class);
-                InfoDetailsActivity.scanResult = scanResult;
-                startActivity(intent);
+        stopBleScan();
+        handler.postDelayed(() -> {
+            loadingDialog.dismissDialog();
+            Intent intent = new Intent(MainActivity.this, InfoDetailsActivity.class);
+            InfoDetailsActivity.scanResult = scanResult;
+            startActivity(intent);
 
-            }
         }, 4000);
 
     }

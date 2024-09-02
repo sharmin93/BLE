@@ -34,9 +34,6 @@
             android:name=".activity.InfoDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ScannedBleActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.BLEApp">
