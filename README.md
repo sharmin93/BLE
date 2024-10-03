@@ -1,7 +1,7 @@
 # BLE Application Guide
 
 This project is a Bluetooth Low Energy (BLE) application designed to interact with BLE devices. The application provides several key features, including scanning for nearby BLE devices, connecting to BLE devices, reading data from them, and displaying device information.
-![Workflow](./images/bluetooth_icon.png)
+![Workflow](app/src/assets/images/bluetooth_icon.png)
 ## Key Features
 
 - **Scanning for Nearby BLE Devices**: Continuously scans for available BLE devices in the vicinity and displays them in a list.
